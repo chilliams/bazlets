@@ -140,7 +140,7 @@ def gen_classpath(ext):
   lib = set()
 
   java_library = re.compile('bazel-out/(?:.*)-fastbuild/bin(.*)/[^/]+[.]jar$')
-  srcs = re.compile('(.*/external/[^/]+)/jar/(.*)[.]jar')
+  srcs = re.compile('(.*)[.]jar')
   for p in _query_classpath():
     m = java_library.match(p)
     if m:
@@ -188,9 +188,8 @@ def gen_classpath(ext):
       s = None
       m = srcs.match(j)
       if m:
-        prefix = m.group(1)
-        suffix = m.group(2)
-        p = os.path.join(prefix, "src", "%s-src.jar" % suffix)
+        f = m.group(1)
+        p = "%s-sources.jar" % f
         if os.path.exists(p):
           s = p
       classpathentry('lib', j, s)
